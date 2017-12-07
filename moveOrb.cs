@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class moveOrb : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class moveOrb : MonoBehaviour
 
 	public Rigidbody rb;
 	public SphereCollider col;
+	public Transform Explosion;
 
 	public float horizont = 0;
 	// Use this for initialization
@@ -26,7 +28,7 @@ public class moveOrb : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		rb.GetComponent<Rigidbody>().velocity = new Vector3(horizont, 0, 4);
+		rb.GetComponent<Rigidbody>().velocity = new Vector3(horizont, GM.vertVel, 4);
 		col = GetComponent<SphereCollider>();
 
 		Physics.gravity = new Vector3(0, -100.0F, 0);
@@ -57,10 +59,42 @@ public class moveOrb : MonoBehaviour
 		if (other.gameObject.tag == "Dödlig")
 		{
 			Destroy(gameObject);
+			GM.hastighet = 0;
+			Instantiate(Explosion, transform.position, Explosion.rotation);
+			GM.klart = "död";
 		}
 		if (other.gameObject.tag == "Capsule")
 		{
 			Destroy(other.gameObject);
+		}
+	}
+
+	void OnTriggerEnter(Collider other)
+	{
+		if (other.gameObject.name == "testkamera")
+		{
+			GM.vertVel = 2;
+		}
+		if (other.gameObject.name == "testkamerastop")
+		{
+			GM.vertVel = 0;
+		}
+		if (other.gameObject.name == "testkameraner")
+		{
+			GM.vertVel = -2;
+		}
+		if (other.gameObject.name == "hastKamera")
+		{
+			GM.hastighet = 2;
+		}
+		if (other.gameObject.name == "hastKameraNorm")
+		{
+			GM.hastighet = 4;
+		}
+		if (other.gameObject.name == "mynt")
+		{
+			Destroy(other.gameObject);
+			GM.mynt += 1;
 		}
 	}
 
